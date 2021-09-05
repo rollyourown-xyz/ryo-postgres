@@ -11,7 +11,7 @@ helpMessage()
    echo "Flags:"
    echo -e "-n hostname \t\t\t(Mandatory) Name of the host for which to build images"
    echo -e "-v version \t\t\t(Mandatory) Version stamp to apply to images, e.g. 20210101-1"
-   echo -e "-p postgres_version \t(Optional) Override default postgres *major* version to use for the postgres image, e.g. 13 (default)"
+   echo -e "-p postgres_version \t\t(Optional) Override default postgres *major* version to use for the postgres image, e.g. 13 (default)"
    echo -e "-h \t\t\t\tPrint this help message"
    echo ""
    exit 1
@@ -27,7 +27,7 @@ errorMessage()
 # Default software versions
 postgres_version='13'
 
-while getopts n:v:m:h flag
+while getopts n:v:p:h flag
 do
     case "${flag}" in
         n) hostname=${OPTARG};;
