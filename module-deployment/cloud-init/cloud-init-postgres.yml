@@ -1,0 +1,5 @@
+#cloud-config
+package_upgrade: false
+runcmd:
+  # Bootstrap postgre
+  - /usr/local/bin/postgres-bootstrap.sh
