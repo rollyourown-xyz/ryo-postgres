@@ -33,7 +33,7 @@ resource "lxd_container" "postgres" {
     
     properties = {
       source   = join("", ["/var/containers/", local.module_id, "/data"])
-      path     = "/var/pgbdata"
+      path     = "/var/pgdata"
       readonly = "false"
       shift    = "true"
     }
