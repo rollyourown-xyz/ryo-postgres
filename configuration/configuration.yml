@@ -7,3 +7,4 @@
 
 # Do not change this unless you know what you are doing 
 module_id: ryo-postgres
+postgres_ip_addr_host_part: 13
