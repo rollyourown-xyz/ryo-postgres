@@ -31,6 +31,7 @@
 # Load the postgres user password from previously created file (if previously generated)
 #
 - name: Load the postgres user password from previously created file
+  no_log: true
   include_vars:
     file: "{{ playbook_dir }}/../../configuration/postgres_user_password_{{ host_id }}.yml"
   when: postgres_user_password_file.stat.exists
@@ -39,6 +40,7 @@
 # Generate a random string as postgres user password (if not previously generated)
 #
 - name: Generate a random string as postgres user password
+  no_log: true
   shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 24"
   register: postgres_user_password_stdout
   when: not postgres_user_password_file.stat.exists
@@ -47,6 +49,7 @@
 # Assign the postgres user password to the variable postgres_user_password (if not previously generated)
 #
 - name: Assign the postgres user password to the variable postgres_user_password
+  no_log: true
   set_fact:
     postgres_user_password: "{{ postgres_user_password_stdout.stdout }}"
   when: not postgres_user_password_file.stat.exists
@@ -55,6 +58,7 @@
 # Write the postgres user password to a file in the module configuration directory on the local machine (if not previously generated)
 #
 - name: Write the postgres user password to a file in the module configuration directory
+  no_log: true
   delegate_to: localhost
   template:
     mode: 0640
@@ -70,6 +74,7 @@
 # Set postgres user password
 #
 - name: Set postgres user password
+  no_log: true
   become: yes
   become_user: postgres
   postgresql_user:
