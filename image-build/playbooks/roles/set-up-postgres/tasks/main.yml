@@ -1,0 +1,196 @@
+---
+
+# Install python3-psycopg2 for ansible postgres provisioning
+#
+- name: Install python3-psycopg2
+  apt:
+    name: python3-psycopg2
+    update_cache: yes
+    state: present
+
+
+# Set postgres to listen on all interfaces (to be accessible from outside the container)
+#
+- name: Set listen_addresses
+  become: yes
+  become_user: postgres
+  postgresql_set:
+    name: listen_addresses
+    value: "\"*\""
+
+
+# Check existence of a previously generated postgres user password for the host
+#
+- name: Check existence of a previously generated postgres user password for the host
+  delegate_to: localhost
+  stat:
+    path: "{{ playbook_dir }}/../../configuration/postgres_user_password_{{ host_id }}.yml"
+  register: postgres_user_password_file
+
+
+# Load the postgres user password from previously created file (if previously generated)
+#
+- name: Load the postgres user password from previously created file
+  include_vars:
+    file: "{{ playbook_dir }}/../../configuration/postgres_user_password_{{ host_id }}.yml"
+  when: postgres_user_password_file.stat.exists
+
+
+# Generate a random string as postgres user password (if not previously generated)
+#
+- name: Generate a random string as postgres user password
+  shell: "tr -dc A-Za-z0-9 </dev/urandom | head -c 24"
+  register: postgres_user_password_stdout
+  when: not postgres_user_password_file.stat.exists
+
+
+# Assign the postgres user password to the variable postgres_user_password (if not previously generated)
+#
+- name: Assign the postgres user password to the variable postgres_user_password
+  set_fact:
+    postgres_user_password: "{{ postgres_user_password_stdout.stdout }}"
+  when: not postgres_user_password_file.stat.exists
+
+
+# Write the postgres user password to a file in the module configuration directory on the local machine (if not previously generated)
+#
+- name: Write the postgres user password to a file in the module configuration directory
+  delegate_to: localhost
+  template:
+    mode: 0640
+    owner: "{{ local_non_root_user }}"
+    group: "{{ local_non_root_user }}"
+    dest: "{{ playbook_dir }}/../../configuration/postgres_user_password_{{ host_id }}.yml"
+    src: postgres_user_password.yml.j2
+    force: yes
+    backup: yes
+  when: not postgres_user_password_file.stat.exists
+
+
+# Set postgres user password
+#
+- name: Set postgres user password
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: postgres
+    password: "{{ postgres_user_password }}"
+    state: present
+
+
+# Set postgres to allow remote connections by postgres user from wireguard network
+#
+- name: Set postgres to allow remote connections by postgres user from wireguard network
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    contype: host
+    address: "{{ wireguard_address_network_part }}.0/24"
+    databases: all
+    users: postgres
+    method: md5
+    state: present
+
+
+# Set postgres to allow remote connections to all databases from other containers
+#
+- name: Set postgres to allow remote connections to all databases from other containers
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    contype: host
+    address: "{{ lxd_host_network_part }}.0/24"
+    databases: all
+    users: all
+    method: md5
+    state: present
+
+
+# Uninstall python3-psycopg2 for ansible postgres provisioning
+#
+- name: Uninstall python3-psycopg2
+  apt:
+    name: python3-psycopg2
+    update_cache: no
+    state: absent
+    purge: yes
+    autoremove: yes
+
+
+# Stop and disable postgresql service
+#
+- name: Stop and disable postgresql service
+  service:
+    name: postgresql
+    enabled: no
+    state: stopped
+
+
+# Copy data_directory config file
+#
+- name: Copy data_directory config file
+  copy:
+    mode: 0644
+    owner: postgres
+    group: postgres
+    dest: /etc/postgresql/{{ postgres_version }}/main/conf.d/01-datadir.conf
+    src: 01-datadir.conf
+    force: yes
+
+
+# Copy postgres bootstrapping script
+#
+- name: Copy postgres bootstrapping script
+  template:
+    mode: 0770
+    owner: root
+    group: root
+    dest: /usr/local/bin/postgres-bootstrap.sh
+    src: postgres-bootstrap.sh.j2
+    force: yes
+
+
+# Copy postgres-service consul service configuration file
+#
+- name: Copy postgres-service consul service configuration file
+  copy:
+    mode: 0640
+    owner: consul
+    group: consul
+    dest: /etc/consul.d/postgres-service.hcl
+    src: postgres-service.hcl
+    force: yes
+
+
+# Copy database backup cron file
+#
+- name: Copy database backup cron file
+  copy:
+    mode: 0640
+    owner: root
+    group: root
+    dest: /usr/local/bin/db_backup_cronjob
+    src: db_backup_cronjob
+    force: yes
+
+
+# Copy database backup script
+#
+- name: Copy database backup script
+  copy:
+    mode: 0755
+    owner: root
+    group: root
+    dest: /usr/local/bin/db-backup.sh
+    src: db-backup.sh
+    force: yes
+
+
+# Copy cron deployment script
+#
+- name: Copy cron deployment script
+  copy:
+    mode: 0755
+    owner: root
+    group: root
+    dest: /usr/local/bin/deploy-cron.sh
+    src: deploy-cron.sh
+    force: yes

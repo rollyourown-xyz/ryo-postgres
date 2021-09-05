@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# If the file "BOOTSRTAPPED" is not already present then run bootstrapping tasks
+if [ ! -f "/var/pgdata/BOOTSTRAPPED" ]; then
+  
+  # Move postgresql data directory contents to mounted directory
+  mv /var/lib/postgresql/{{ postgres_version }}/main /var/pgdata/main
+  
+  # Add file BOOTSTRAPPED to indicate no further bootstrapping needed
+  touch  /var/pgdata/BOOTSTRAPPED
+
+fi
+
+# Enable postgresql service
+service postgresql enable
+
+# Start postgresql service
+service postgresql start

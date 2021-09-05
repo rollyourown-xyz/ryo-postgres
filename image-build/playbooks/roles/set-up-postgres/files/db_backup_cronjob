@@ -1,0 +1,2 @@
+# Backup the database daily at 4am
+* 4 * * * root /usr/local/bin/db-backup.sh
