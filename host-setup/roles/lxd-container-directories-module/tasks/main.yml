@@ -14,12 +14,6 @@
     state: directory
     mode: '0755'
 
-- name: Create a directory for postgres configuration
-  file:
-    path: /var/containers/{{ module_id }}/config
-    state: directory
-    mode: '0755'
-
 - name: Create a directory for postgres data
   file:
     path: /var/containers/{{ module_id }}/data
