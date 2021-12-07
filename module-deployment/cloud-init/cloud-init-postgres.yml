@@ -1,5 +1,7 @@
 #cloud-config
 package_upgrade: false
 runcmd:
-  # Bootstrap postgre
+  # Bootstrap postgresql
   - /usr/local/bin/postgres-bootstrap.sh
+  # Deploy backup cronjob
+  - /usr/local/bin/deploy-cron.sh
