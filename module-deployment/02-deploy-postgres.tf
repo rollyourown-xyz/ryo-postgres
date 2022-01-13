@@ -32,7 +32,7 @@ resource "lxd_container" "postgres" {
     type = "disk"
     
     properties = {
-      source   = join("", ["/var/containers/", local.module_id, "/data"])
+      source   = join("", ["/var/containers/", local.module_id, "/postgres/data"])
       path     = "/var/pgdata"
       readonly = "false"
       shift    = "true"
@@ -45,7 +45,7 @@ resource "lxd_container" "postgres" {
     type = "disk"
     
     properties = {
-      source   = join("", ["/var/containers/", local.module_id, "/backup"])
+      source   = join("", ["/var/containers/", local.module_id, "/postgres/backup"])
       path     = "/var/pgbackup"
       readonly = "false"
       shift    = "true"

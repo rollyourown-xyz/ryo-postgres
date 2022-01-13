@@ -14,14 +14,20 @@
     state: directory
     mode: '0755'
 
+- name: Create a directory to mount in postgres container
+  file:
+    path: "/var/containers/{{ module_id }}/postgres"
+    state: directory
+    mode: '0755'
+
 - name: Create a directory for postgres data
   file:
-    path: /var/containers/{{ module_id }}/data
+    path: /var/containers/{{ module_id }}/postgres/data
     state: directory
     mode: '0755'
 
 - name: Create a directory for postgres backup
   file:
-    path: /var/containers/{{ module_id }}/backup
+    path: /var/containers/{{ module_id }}/postgres/backup
     state: directory
     mode: '0755'
