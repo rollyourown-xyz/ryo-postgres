@@ -12,7 +12,7 @@ if [ ! -f "/var/pgdata/BOOTSTRAPPED" ]; then
 fi
 
 # Enable postgresql service
-service postgresql enable
+systemctl enable postgresql.service
 
 # Start postgresql service
-service postgresql start
+systemctl start postgresql.service
