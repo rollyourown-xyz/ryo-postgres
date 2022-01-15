@@ -45,13 +45,13 @@ fi
 
 
 # Get Module ID from configuration file
-MODULE_ID="$(yq eval '.module_id' "$SCRIPT_DIR"/configuration/configuration.yml)"
+MODULE_ID="$(yq eval '.module_id' "$SCRIPT_DIR"/../configuration/configuration.yml)"
 
 echo "Building images for "$MODULE_ID" module on "$hostname""
 echo ""
 echo "Building PostgreSQL image"
 echo ""
-echo "Executing command: packer build -var \"host_id="$hostname"\" -var \"version="$version"\" -var \"postgres_version="$postgres_version"\" "$SCRIPT_DIR"/image-build/postgres.pkr.hcl"
+echo "Executing command: packer build -var \"host_id="$hostname"\" -var \"version="$version"\" -var \"postgres_version="$postgres_version"\" "$SCRIPT_DIR"/../image-build/postgres.pkr.hcl"
 echo ""
-packer build -var "host_id="$hostname"" -var "version="$version"" -var "postgres_version="$postgres_version"" "$SCRIPT_DIR"/image-build/postgres.pkr.hcl
+packer build -var "host_id="$hostname"" -var "version="$version"" -var "postgres_version="$postgres_version"" "$SCRIPT_DIR"/../image-build/postgres.pkr.hcl
 echo ""
