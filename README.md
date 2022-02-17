@@ -1,6 +1,6 @@
 # Roll Your Own PostgreSQL Database Server
 
-Deploy a PostgreSQL database server using Ansible, Packer and Terraform.
+This is a [rollyourown.xyz module](https://rollyourown.xyz/rollyourown/project_modules/) to deploy a PostgreSQL database server using Ansible, Packer and Terraform.
 
 ## Module Summary
 
