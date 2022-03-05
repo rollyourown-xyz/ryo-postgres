@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2022 Wilfred Nicoll <xyzroller@rollyourown.xyz>
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Deploy a postgres database and user
 
 This module provisions a PostgreSQL database and user. Various properties of the database and user are specified by input variables:

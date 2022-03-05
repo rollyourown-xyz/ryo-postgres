@@ -1,2 +1,5 @@
+# SPDX-FileCopyrightText: 2022 Wilfred Nicoll <xyzroller@rollyourown.xyz>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Backup the database daily at 4am
 * 4 * * * root /usr/local/bin/db-backup.sh
