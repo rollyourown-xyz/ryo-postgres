@@ -202,3 +202,15 @@
     dest: /usr/local/bin/deploy-cron.sh
     src: deploy-cron.sh
     force: yes
+
+
+# Copy postgres log rotation and deletion configuration
+#
+- name: Copy postgres log rotation and deletion configuration
+  template:
+    mode: 0644
+    owner: root
+    group: root
+    dest: /etc/logrotate.d/postgresql-common
+    src: logrotate_postgres.j2
+    force: yes
