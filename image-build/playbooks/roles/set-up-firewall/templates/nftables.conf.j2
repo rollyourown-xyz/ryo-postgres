@@ -56,6 +56,8 @@ table inet filter {
         {% if host_public_ipv6 == true %}ip6 saddr {{ host_public_ipv6_prefix }}::{{ lxd_host_network_ipv6_subnet }}:0/112 tcp dport 5432 accept
         {% else %}ip6 saddr {{ lxd_host_private_ipv6_prefix }}::{{ lxd_host_network_ipv6_subnet }}:0/112 tcp dport 5432 accept
         {% endif %}
+
+
     }
 
     chain forward {
