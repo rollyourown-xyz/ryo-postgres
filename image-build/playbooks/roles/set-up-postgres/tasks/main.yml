@@ -120,7 +120,6 @@
     users: all
     method: md5
     state: present
-  when: host_public_ipv6
 
 - name: Set postgres to allow remote connections to all databases from other containers (IPv6 public)
   postgresql_pg_hba:
