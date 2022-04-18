@@ -88,7 +88,17 @@
 
 # Set postgres to allow remote connections by postgres user from wireguard network
 #
-- name: Set postgres to allow remote connections by postgres user from wireguard network
+- name: Set postgres to allow remote connections by postgres user from wireguard network (IPv4)
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    contype: host
+    address: "{{ wireguard_address_network_part }}.0/24"
+    databases: all
+    users: postgres
+    method: md5
+    state: present
+
+- name: Set postgres to allow remote connections by postgres user from wireguard network (IPv6)
   postgresql_pg_hba:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     contype: host
@@ -101,6 +111,17 @@
 
 # Set postgres to allow remote connections to all databases from other containers
 #
+- name: Set postgres to allow remote connections to all databases from other containers (IPv4)
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    contype: host
+    address: "{{ lxd_host_network_part }}.0/24"
+    databases: all
+    users: all
+    method: md5
+    state: present
+  when: host_public_ipv6
+
 - name: Set postgres to allow remote connections to all databases from other containers (IPv6 public)
   postgresql_pg_hba:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
