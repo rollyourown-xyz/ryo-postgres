@@ -92,7 +92,7 @@
   postgresql_pg_hba:
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     contype: host
-    address: "{{ wireguard_address_network_part }}.0/24"
+    address: "{{ wireguard_network_part }}.0/24"
     databases: all
     users: postgres
     method: md5
