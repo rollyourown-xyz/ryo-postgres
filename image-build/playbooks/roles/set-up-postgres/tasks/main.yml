@@ -12,6 +12,15 @@
     state: present
 
 
+# Install acl for ansible postgres provisioning
+#
+- name: Install acl
+  apt:
+    name: acl
+    update_cache: yes
+    state: present
+
+
 # Set postgres to listen on all interfaces (to be accessible from outside the container)
 #
 - name: Set listen_addresses
@@ -149,6 +158,17 @@
 - name: Uninstall python3-psycopg2
   apt:
     name: python3-psycopg2
+    update_cache: no
+    state: absent
+    purge: yes
+    autoremove: yes
+
+
+# Uninstall acl for ansible postgres provisioning
+#
+- name: Uninstall acl
+  apt:
+    name: acl
     update_cache: no
     state: absent
     purge: yes
