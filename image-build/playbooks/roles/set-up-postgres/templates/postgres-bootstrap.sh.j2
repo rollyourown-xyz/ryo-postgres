@@ -13,6 +13,9 @@ if [ ! -f "/var/pgdata/BOOTSTRAPPED" ]; then
 
 fi
 
+# Make sure postgres data directory ownership is correct
+chown -R postgres:postgres /var/pgdata/main
+
 # Enable postgresql service
 systemctl enable postgresql.service
 
